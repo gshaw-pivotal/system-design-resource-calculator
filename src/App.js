@@ -6,6 +6,8 @@ function App() {
 
     const roughDaysPerMonth = 30;
 
+    const bytesPer = 1000;
+
     const [dau, setDau] = useState(0);
 
     const [aveRead, setAveRead] = useState(0);
@@ -22,6 +24,28 @@ function App() {
     const [newStoragePerMonth, setNewStoragePerMonth] = useState(0);
     const [totalStorage, setTotalStorage] = useState(0);
 
+    const [newStoragePerMonthSuffix, setNewStoragePerMonthSuffix] = useState('KB');
+    const [totalStorageSuffix, setTotalStorageSuffix] = useState('KB');
+
+    const suffix = count => {
+        switch (count) {
+            case 0:
+                return "KB";
+            case 1:
+                return "MB";
+            case 2:
+                return "GB";
+            case 3:
+                return "TB";
+            case 4:
+                return "PB";
+            case 5:
+                return "EB";
+            case 6:
+                return "ZB";
+        }
+    }
+
     const calculate = event => {
         setResults(true);
 
@@ -29,8 +53,27 @@ function App() {
         setReadPerSec((dau * aveRead) / roughSecondsPerDay);
         setWritePerSec((dau * aveWrite) / roughSecondsPerDay);
 
-        setNewStoragePerMonth(dau * aveWrite * dataSize * roughDaysPerMonth);
-        setTotalStorage(dau * aveWrite * dataSize * roughDaysPerMonth * dataRetention);
+        let newStorage = dau * aveWrite * dataSize * roughDaysPerMonth;
+        let nsCount = 0;
+
+        while (newStorage > bytesPer && nsCount <= 6) {
+            newStorage = newStorage / bytesPer;
+            nsCount = nsCount + 1;
+        }
+
+        setNewStoragePerMonth(newStorage);
+        setNewStoragePerMonthSuffix(suffix(nsCount));
+
+        let total = dau * aveWrite * dataSize * roughDaysPerMonth * dataRetention
+        let tsCount = 0;
+
+        while (total > bytesPer && tsCount <= 6) {
+            total = total / bytesPer;
+            tsCount = tsCount + 1;
+        }
+
+        setTotalStorage(total);
+        setTotalStorageSuffix(suffix(tsCount));
     }
 
     const clear = event => {
@@ -105,7 +148,7 @@ function App() {
                    </div>
                    <div className={"row"}>
                        <div className={"column-start-space"}/>
-                       <span className={"column-one"}>Data per write request (kB)</span>
+                       <span className={"column-one"}>Data per write request (KB)</span>
                        <div className={"column-spacer"}/>
                        <input
                            className={"column-two"}
@@ -154,14 +197,14 @@ function App() {
                        <h3 className={"sub-header"}>Storage</h3>
                        <div className={"row"}>
                            <div className={"column-start-space"}/>
-                           <span className={"column-one"}>Data generated per month (kB)</span>
+                           <span className={"column-one"}>Data generated per month ({newStoragePerMonthSuffix})</span>
                            <div className={"column-spacer"}/>
                            <span className={"column-two"}>{newStoragePerMonth}</span>
                            <div className={"column-end-space"}/>
                        </div>
                        <div className={"row"}>
                            <div className={"column-start-space"}/>
-                           <span className={"column-one"}>Total Storage required (kB)</span>
+                           <span className={"column-one"}>Total Storage required ({totalStorageSuffix})</span>
                            <div className={"column-spacer"}/>
                            <span className={"column-two"}>{totalStorage}</span>
                            <div className={"column-end-space"}/>
