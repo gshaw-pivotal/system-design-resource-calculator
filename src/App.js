@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 
 function App() {
 
+    const roughSecondsPerDay = 100000;
+
+    const roughDaysPerMonth = 30;
+
     const [dau, setDau] = useState(0);
 
     const [aveRead, setAveRead] = useState(0);
@@ -12,8 +16,21 @@ function App() {
 
     const [results, setResults] = useState(false);
 
+    const [readPerSec, setReadPerSec] = useState(0);
+    const [writePerSec, setWritePerSec] = useState(0);
+
+    const [newStoragePerMonth, setNewStoragePerMonth] = useState(0);
+    const [totalStorage, setTotalStorage] = useState(0);
+
     const calculate = event => {
         setResults(true);
+
+        // Calculate read requests per second
+        setReadPerSec((dau * aveRead) / roughSecondsPerDay);
+        setWritePerSec((dau * aveWrite) / roughSecondsPerDay);
+
+        setNewStoragePerMonth(dau * aveWrite * dataSize * roughDaysPerMonth);
+        setTotalStorage(dau * aveWrite * dataSize * roughDaysPerMonth * dataRetention);
     }
 
     const clear = event => {
@@ -24,6 +41,11 @@ function App() {
         setAveWrite(0);
         setDataRetention(0);
         setDataSize(0);
+
+        setReadPerSec(0);
+        setWritePerSec(0);
+        setNewStoragePerMonth(0);
+        setTotalStorage(0);
     }
 
     return (
@@ -96,22 +118,26 @@ function App() {
                    <span>
                        Read Requests per Second (RPS)
                    </span>
+                   <span>{readPerSec}</span>
                </div>
-               <div>
+                   <div>
                    <span>
                        Write Requests per Second (RPS)
                    </span>
-               </div>
-               <h3>Storage</h3>
+                       <span>{writePerSec}</span>
+                   </div>
+                   <h3>Storage</h3>
                <div>
                    <span>
-                       Data generated per month
+                       Data generated per month (kB)
                    </span>
+                   <span>{newStoragePerMonth}</span>
                </div>
                <div>
                    <span>
-                       Total Storage required
+                       Total Storage required (kB)
                    </span>
+                   <span>{totalStorage}</span>
                </div>
                </div>
                    ) : ('')}
