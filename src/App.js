@@ -10,9 +10,26 @@ function App() {
     const [dataRetention, setDataRetention] = useState(0);
     const [dataSize, setDataSize] = useState(0);
 
+    const [results, setResults] = useState(false);
+
+    const calculate = event => {
+        setResults(true);
+    }
+
+    const clear = event => {
+        setResults(false);
+
+        setDau(0);
+        setAveRead(0);
+        setAveWrite(0);
+        setDataRetention(0);
+        setDataSize(0);
+    }
+
     return (
        <div>
            <main>
+               <div>
                <h2>Inputs</h2>
                <div>
                 <span>
@@ -66,6 +83,13 @@ function App() {
                        value={dataSize}
                    />
                </div>
+                   <div>
+                       <button onClick={calculate}>Calculate Resource</button>
+                       <button onClick={clear}>Clear</button>
+                   </div>
+               </div>
+               {(results) ? (
+               <div>
                <h2>Results</h2>
                <h3>Network</h3>
                <div>
@@ -89,6 +113,8 @@ function App() {
                        Total Storage required
                    </span>
                </div>
+               </div>
+                   ) : ('')}
            </main>
        </div>
     );
