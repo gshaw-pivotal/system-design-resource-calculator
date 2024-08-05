@@ -52,95 +52,122 @@ function App() {
        <div>
            <main>
                <div>
-               <h2>Inputs</h2>
-               <div>
-                <span>
-                   Daily Active Users (DAU)
-               </span>
-                   <input
-                       type="number"
-                       onChange={e => setDau(e.target.value)}
-                       value={dau}
-                   />
-               </div>
-               <hr/>
-               <div>
-               <span>
-                   Average Number of Read Requests per User
-               </span>
-                   <input
-                       type="number"
-                       onChange={e => setAveRead(e.target.value)}
-                       value={aveRead}
-                   />
-               </div>
-               <div>
-               <span>
-                   Average Number of Write Requests per User
-               </span>
-                   <input
-                       type="number"
-                       onChange={e => setAveWrite(e.target.value)}
-                       value={aveWrite}
-                   />
-               </div>
-               <hr/>
-               <div>
-               <span>
-                   Data Retention time (months)
-               </span>
-                   <input
-                       type="number"
-                       onChange={e => setDataRetention(e.target.value)}
-                       value={dataRetention}
-                   />
-               </div>
-               <div>
-               <span>
-                   Data per write request (kB)
-               </span>
-                   <input
-                       type="number"
-                       onChange={e => setDataSize(e.target.value)}
-                       value={dataSize}
-                   />
-               </div>
-                   <div>
-                       <button onClick={calculate}>Calculate Resource</button>
-                       <button onClick={clear}>Clear</button>
+                   <h2>Inputs</h2>
+                   <div className={"row"}>
+                       <div className={"column-start-space"}/>
+                       <span className={"column-one"}>Daily Active Users (DAU)</span>
+                       <div className={"column-spacer"}/>
+                       <input
+                           className={"column-two"}
+                           type="number"
+                           onChange={e => setDau(e.target.value)}
+                           value={dau}
+                       />
+                       <div className={"column-end-space"}/>
+                   </div>
+                   <hr/>
+                   <div className={"row"}>
+                       <div className={"column-start-space"}/>
+                       <span className={"column-one"}>Average Number of Read Requests per User</span>
+                       <div className={"column-spacer"}/>
+                       <input
+                           className={"column-two"}
+                           type="number"
+                           onChange={e => setAveRead(e.target.value)}
+                           value={aveRead}
+                       />
+                       <div className={"column-end-space"}/>
+                   </div>
+                   <div className={"row"}>
+                       <div className={"column-start-space"}/>
+                       <span className={"column-one"}>Average Number of Write Requests per User</span>
+                       <div className={"column-spacer"}/>
+                       <input
+                           className={"column-two"}
+                           type="number"
+                           onChange={e => setAveWrite(e.target.value)}
+                           value={aveWrite}
+                       />
+                       <div className={"column-end-space"}/>
+                   </div>
+                   <hr/>
+                   <div className={"row"}>
+                       <div className={"column-start-space"}/>
+                       <span className={"column-one"}>Data Retention time (months)</span>
+                       <div className={"column-spacer"}/>
+                       <input
+                           className={"column-two"}
+                           type="number"
+                           onChange={e => setDataRetention(e.target.value)}
+                           value={dataRetention}
+                       />
+                       <div className={"column-end-space"}/>
+                   </div>
+                   <div className={"row"}>
+                       <div className={"column-start-space"}/>
+                       <span className={"column-one"}>Data per write request (kB)</span>
+                       <div className={"column-spacer"}/>
+                       <input
+                           className={"column-two"}
+                           type="number"
+                           onChange={e => setDataSize(e.target.value)}
+                           value={dataSize}
+                       />
+                       <div className={"column-end-space"}/>
+                   </div>
+                   <div className={"row"}>
+                       <div className={"column-start-space"}/>
+                       <div className={"column-one"}>
+                           <button
+                               className={"button"}
+                               onClick={calculate}>Calculate Resource
+                           </button>
+                       </div>
+                       <div className={"column-spacer"}/>
+                       <div className={"column-two"}>
+                           <button
+                               className={"button"}
+                               onClick={clear}>Clear
+                           </button>
+                       </div>
+                       <div className={"column-end-space"}/>
                    </div>
                </div>
                {(results) ? (
-               <div>
-               <h2>Results</h2>
-               <h3>Network</h3>
-               <div>
-                   <span>
-                       Read Requests per Second (RPS)
-                   </span>
-                   <span>{readPerSec}</span>
-               </div>
                    <div>
-                   <span>
-                       Write Requests per Second (RPS)
-                   </span>
-                       <span>{writePerSec}</span>
+                       <h2>Results</h2>
+                       <h3 className={"sub-header"}>Network</h3>
+                       <div className={"row"}>
+                           <div className={"column-start-space"}/>
+                           <span className={"column-one"}>Read Requests per Second (RPS)</span>
+                           <div className={"column-spacer"}/>
+                           <span className={"column-two"}>{readPerSec}</span>
+                           <div className={"column-end-space"}/>
+                       </div>
+                       <div className={"row"}>
+                           <div className={"column-start-space"}/>
+                           <span className={"column-one"}>Write Requests per Second (RPS)</span>
+                           <div className={"column-spacer"}/>
+                           <span className={"column-two"}>{writePerSec}</span>
+                           <div className={"column-end-space"}/>
+                       </div>
+                       <h3 className={"sub-header"}>Storage</h3>
+                       <div className={"row"}>
+                           <div className={"column-start-space"}/>
+                           <span className={"column-one"}>Data generated per month (kB)</span>
+                           <div className={"column-spacer"}/>
+                           <span className={"column-two"}>{newStoragePerMonth}</span>
+                           <div className={"column-end-space"}/>
+                       </div>
+                       <div className={"row"}>
+                           <div className={"column-start-space"}/>
+                           <span className={"column-one"}>Total Storage required (kB)</span>
+                           <div className={"column-spacer"}/>
+                           <span className={"column-two"}>{totalStorage}</span>
+                           <div className={"column-end-space"}/>
+                       </div>
                    </div>
-                   <h3>Storage</h3>
-               <div>
-                   <span>
-                       Data generated per month (kB)
-                   </span>
-                   <span>{newStoragePerMonth}</span>
-               </div>
-               <div>
-                   <span>
-                       Total Storage required (kB)
-                   </span>
-                   <span>{totalStorage}</span>
-               </div>
-               </div>
-                   ) : ('')}
+               ) : ('')}
            </main>
        </div>
     );

@@ -1,0 +1,33 @@
+.row {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.column-start-space {
+    flex: 5%;
+}
+
+.column-end-space {
+    flex: 20%;
+}
+
+.column-spacer {
+    flex: 5%;
+}
+
+.column-one {
+    flex: 40%;
+    text-align: right;
+}
+
+.column-two {
+    flex: 30%;
+}
+
+.button {
+    width: 40%;
+}
+
+.sub-header {
+    text-align: center;
+}
