@@ -21,6 +21,9 @@ function App() {
     const [readPerSec, setReadPerSec] = useState(0);
     const [writePerSec, setWritePerSec] = useState(0);
 
+    const [writeBandwidthPerSec, setWriteBandwidthPerSec] = useState(0);
+    const [writeBandwidthPerSecSuffix, setWriteBandwidthPerSecSuffix] = useState('KB');
+
     const [newStoragePerMonth, setNewStoragePerMonth] = useState(0);
     const [totalStorage, setTotalStorage] = useState(0);
 
@@ -52,6 +55,17 @@ function App() {
         // Calculate read requests per second
         setReadPerSec((dau * aveRead) / roughSecondsPerDay);
         setWritePerSec((dau * aveWrite) / roughSecondsPerDay);
+
+        let writeBandwidthPerSec = ((dau * aveWrite) / roughSecondsPerDay) * dataSize;
+        let bsCount = 0;
+
+        while (writeBandwidthPerSec > bytesPer && bsCount <= 6) {
+            writeBandwidthPerSec = writeBandwidthPerSec / bytesPer;
+            bsCount = bsCount + 1;
+        }
+
+        setWriteBandwidthPerSec(writeBandwidthPerSec);
+        setWriteBandwidthPerSecSuffix(suffix(bsCount));
 
         let newStorage = dau * aveWrite * dataSize * roughDaysPerMonth;
         let nsCount = 0;
@@ -87,8 +101,14 @@ function App() {
 
         setReadPerSec(0);
         setWritePerSec(0);
+
+        setWriteBandwidthPerSec(0);
+
         setNewStoragePerMonth(0);
         setTotalStorage(0);
+
+        setNewStoragePerMonthSuffix('');
+        setTotalStorageSuffix('');
     }
 
     return (
@@ -189,9 +209,9 @@ function App() {
                        </div>
                        <div className={"row"}>
                            <div className={"column-start-space"}/>
-                           <span className={"column-one"}>Write Requests per Second (RPS)</span>
+                           <span className={"column-one"}>Write Requests per Second (RPS) / Bandwidth</span>
                            <div className={"column-spacer"}/>
-                           <span className={"column-two"}>{writePerSec}</span>
+                           <span className={"column-two"}>{writePerSec} / {writeBandwidthPerSec} ({writeBandwidthPerSecSuffix})</span>
                            <div className={"column-end-space"}/>
                        </div>
                        <h3 className={"sub-header"}>Storage</h3>
