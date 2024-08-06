@@ -14,12 +14,16 @@ function App() {
     const [aveWrite, setAveWrite] = useState(0);
 
     const [dataRetention, setDataRetention] = useState(0);
-    const [dataSize, setDataSize] = useState(0);
+    const [readDataSize, setReadDataSize] = useState(0);
+    const [writeDataSize, setWriteDataSize] = useState(0);
 
     const [results, setResults] = useState(false);
 
     const [readPerSec, setReadPerSec] = useState(0);
     const [writePerSec, setWritePerSec] = useState(0);
+
+    const [readBandwidthPerSec, setReadBandwidthPerSec] = useState(0);
+    const [readBandwidthPerSecSuffix, setReadBandwidthPerSecSuffix] = useState('KB');
 
     const [writeBandwidthPerSec, setWriteBandwidthPerSec] = useState(0);
     const [writeBandwidthPerSecSuffix, setWriteBandwidthPerSecSuffix] = useState('KB');
@@ -56,18 +60,29 @@ function App() {
         setReadPerSec((dau * aveRead) / roughSecondsPerDay);
         setWritePerSec((dau * aveWrite) / roughSecondsPerDay);
 
-        let writeBandwidthPerSec = ((dau * aveWrite) / roughSecondsPerDay) * dataSize;
-        let bsCount = 0;
+        let readBandwidthPerSec = ((dau * aveRead) / roughSecondsPerDay) * readDataSize;
+        let rbsCount = 0;
 
-        while (writeBandwidthPerSec > bytesPer && bsCount <= 6) {
+        while (readBandwidthPerSec > bytesPer && rbsCount <= 6) {
+            readBandwidthPerSec = readBandwidthPerSec / bytesPer;
+            rbsCount = rbsCount + 1;
+        }
+
+        setReadBandwidthPerSec(readBandwidthPerSec);
+        setReadBandwidthPerSecSuffix(suffix(rbsCount));
+
+        let writeBandwidthPerSec = ((dau * aveWrite) / roughSecondsPerDay) * writeDataSize;
+        let wbsCount = 0;
+
+        while (writeBandwidthPerSec > bytesPer && wbsCount <= 6) {
             writeBandwidthPerSec = writeBandwidthPerSec / bytesPer;
-            bsCount = bsCount + 1;
+            wbsCount = wbsCount + 1;
         }
 
         setWriteBandwidthPerSec(writeBandwidthPerSec);
-        setWriteBandwidthPerSecSuffix(suffix(bsCount));
+        setWriteBandwidthPerSecSuffix(suffix(wbsCount));
 
-        let newStorage = dau * aveWrite * dataSize * roughDaysPerMonth;
+        let newStorage = dau * aveWrite * writeDataSize * roughDaysPerMonth;
         let nsCount = 0;
 
         while (newStorage > bytesPer && nsCount <= 6) {
@@ -78,7 +93,7 @@ function App() {
         setNewStoragePerMonth(newStorage);
         setNewStoragePerMonthSuffix(suffix(nsCount));
 
-        let total = dau * aveWrite * dataSize * roughDaysPerMonth * dataRetention
+        let total = dau * aveWrite * writeDataSize * roughDaysPerMonth * dataRetention
         let tsCount = 0;
 
         while (total > bytesPer && tsCount <= 6) {
@@ -97,12 +112,17 @@ function App() {
         setAveRead(0);
         setAveWrite(0);
         setDataRetention(0);
-        setDataSize(0);
+        setReadDataSize(0);
+        setWriteDataSize(0);
 
         setReadPerSec(0);
         setWritePerSec(0);
 
+        setReadBandwidthPerSec(0);
         setWriteBandwidthPerSec(0);
+
+        setReadBandwidthPerSecSuffix('');
+        setWriteBandwidthPerSecSuffix('');
 
         setNewStoragePerMonth(0);
         setTotalStorage(0);
@@ -168,13 +188,25 @@ function App() {
                    </div>
                    <div className={"row"}>
                        <div className={"column-start-space"}/>
+                       <span className={"column-one"}>Data per read request (KB)</span>
+                       <div className={"column-spacer"}/>
+                       <input
+                           className={"column-two"}
+                           type="number"
+                           onChange={e => setReadDataSize(e.target.value)}
+                           value={readDataSize}
+                       />
+                       <div className={"column-end-space"}/>
+                   </div>
+                   <div className={"row"}>
+                       <div className={"column-start-space"}/>
                        <span className={"column-one"}>Data per write request (KB)</span>
                        <div className={"column-spacer"}/>
                        <input
                            className={"column-two"}
                            type="number"
-                           onChange={e => setDataSize(e.target.value)}
-                           value={dataSize}
+                           onChange={e => setWriteDataSize(e.target.value)}
+                           value={writeDataSize}
                        />
                        <div className={"column-end-space"}/>
                    </div>
@@ -202,9 +234,10 @@ function App() {
                        <h3 className={"sub-header"}>Network</h3>
                        <div className={"row"}>
                            <div className={"column-start-space"}/>
-                           <span className={"column-one"}>Read Requests per Second (RPS)</span>
+                           <span className={"column-one"}>Read Requests per Second (RPS) / Bandwidth</span>
                            <div className={"column-spacer"}/>
-                           <span className={"column-two"}>{readPerSec}</span>
+                           <span
+                               className={"column-two"}>{readPerSec} / {readBandwidthPerSec} ({readBandwidthPerSecSuffix})</span>
                            <div className={"column-end-space"}/>
                        </div>
                        <div className={"row"}>
