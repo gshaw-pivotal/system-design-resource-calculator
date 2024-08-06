@@ -28,9 +28,11 @@ function App() {
     const [writeBandwidthPerSec, setWriteBandwidthPerSec] = useState(0);
     const [writeBandwidthPerSecSuffix, setWriteBandwidthPerSecSuffix] = useState('KB');
 
+    const [newStoragePerDay, setNewStoragePerDay] = useState(0);
     const [newStoragePerMonth, setNewStoragePerMonth] = useState(0);
     const [totalStorage, setTotalStorage] = useState(0);
 
+    const [newStoragePerDaySuffix, setNewStoragePerDaySuffix] = useState('KB');
     const [newStoragePerMonthSuffix, setNewStoragePerMonthSuffix] = useState('KB');
     const [totalStorageSuffix, setTotalStorageSuffix] = useState('KB');
 
@@ -82,16 +84,27 @@ function App() {
         setWriteBandwidthPerSec(writeBandwidthPerSec);
         setWriteBandwidthPerSecSuffix(suffix(wbsCount));
 
-        let newStorage = dau * aveWrite * writeDataSize * roughDaysPerMonth;
-        let nsCount = 0;
+        let dayStorage = dau * aveWrite * writeDataSize;
+        let dsCount = 0;
 
-        while (newStorage > bytesPer && nsCount <= 6) {
-            newStorage = newStorage / bytesPer;
-            nsCount = nsCount + 1;
+        while (dayStorage > bytesPer && dsCount <= 6) {
+            dayStorage = dayStorage / bytesPer;
+            dsCount = dsCount + 1;
         }
 
-        setNewStoragePerMonth(newStorage);
-        setNewStoragePerMonthSuffix(suffix(nsCount));
+        setNewStoragePerDay(dayStorage);
+        setNewStoragePerDaySuffix(suffix(dsCount));
+
+        let monthStorage = dau * aveWrite * writeDataSize * roughDaysPerMonth;
+        let msCount = 0;
+
+        while (monthStorage > bytesPer && msCount <= 6) {
+            monthStorage = monthStorage / bytesPer;
+            msCount = msCount + 1;
+        }
+
+        setNewStoragePerMonth(monthStorage);
+        setNewStoragePerMonthSuffix(suffix(msCount));
 
         let total = dau * aveWrite * writeDataSize * roughDaysPerMonth * dataRetention
         let tsCount = 0;
@@ -124,9 +137,11 @@ function App() {
         setReadBandwidthPerSecSuffix('');
         setWriteBandwidthPerSecSuffix('');
 
+        setNewStoragePerDay(0);
         setNewStoragePerMonth(0);
         setTotalStorage(0);
 
+        setNewStoragePerDaySuffix('');
         setNewStoragePerMonthSuffix('');
         setTotalStorageSuffix('');
     }
@@ -244,10 +259,18 @@ function App() {
                            <div className={"column-start-space"}/>
                            <span className={"column-one"}>Write Requests per Second (RPS) / Bandwidth</span>
                            <div className={"column-spacer"}/>
-                           <span className={"column-two"}>{writePerSec} / {writeBandwidthPerSec} ({writeBandwidthPerSecSuffix})</span>
+                           <span
+                               className={"column-two"}>{writePerSec} / {writeBandwidthPerSec} ({writeBandwidthPerSecSuffix})</span>
                            <div className={"column-end-space"}/>
                        </div>
                        <h3 className={"sub-header"}>Storage</h3>
+                       <div className={"row"}>
+                           <div className={"column-start-space"}/>
+                           <span className={"column-one"}>Data generated per day ({newStoragePerDaySuffix})</span>
+                           <div className={"column-spacer"}/>
+                           <span className={"column-two"}>{newStoragePerDay}</span>
+                           <div className={"column-end-space"}/>
+                       </div>
                        <div className={"row"}>
                            <div className={"column-start-space"}/>
                            <span className={"column-one"}>Data generated per month ({newStoragePerMonthSuffix})</span>
